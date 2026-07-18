@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Our Endless Story</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="introOverlay" class="intro-container">
+        <button id="startButton" class="start-button">
+    ▶
+</button>
+
+<div id="introLoader" class="intro-loader hidden">
+
+    <div class="netflix-loading-circle">
+        <div class="loading-ring"></div>
+        <div id="loadingPercent">0%</div>
+    </div>
+
+</div>
+        <audio id="tudumAudio" src="videos/tudum.mp3" preload="auto"></audio>
+        <div id="netflixLogo" class="netflix-animation">NETFLIX</div>
+        
+        <video id="prePlayTrailer" class="preplay-video hidden" playsinline>
+            
+            <source src="videos/trailer.mp4" type="video/mp4">
+        </video>
+        <div id="titleIntro" class="title-intro hidden">
+
+    <div class="title-row">
+
+        <div class="title-line"></div>
+
+        <h2 class="title-text">
+            OUR ENDLESS STORY
+        </h2>
+
+    </div>
+
+</div>
+
+        <div id="videoControllerHud" class="video-hud-overlay hidden">
+
+            <div class="hud-bottom">
+                <div class="timeline-area">
+
+    <span id="currentTimeDisplay" class="time-stamp">0:00</span>
+
+    <div class="timeline-slider-bg" id="timelineBar">
+            <div class="timeline-progress-fill" id="timelineProgress"></div>
+
+        <div class="preview-thumbnail" id="previewThumbnail">
+
+            <canvas id="previewCanvas"></canvas>
+
+            <div class="preview-time" id="previewTime">
+                0:00
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <span id="durationDisplay" class="time-stamp">0:00</span>
+
+</div>
+                    
+
+
+             <div class="control-utilities">
+                    <div class="util-left">
+                        <button class="hud-icon-btn" id="hudPlayPauseBtn" onclick="toggleHudPlayback()">
+                            <svg id="hudPlayIcon" class="hidden" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+                            <svg id="hudPauseIcon" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                        <button class="hud-icon-btn" onclick="adjustTrailerTime(-10)">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1.33 9.49h-.24v-.15c-.1-.13-.23-.23-.39-.29s-.35-.09-.56-.09c-.27 0-.5.06-.68.17s-.32.27-.41.48c-.09.21-.14.47-.14.77v.29c0 .41.07.72.22.94s.37.33.66.33c.24 0 .43-.05.58-.15s.25-.26.3-.47h.24v1.13h-.22c-.05-.14-.1-.25-.16-.32s-.19-.13-.39-.17-.41-.06-.63-.06c-.47 0-.85-.15-1.14-.44s-.44-.73-.44-1.32v-.39c0-.43.06-.8.19-1.1s.33-.53.6-.69.59-.24.96-.24c.42 0 .76.09 1.02.26s.42.42.49.74l.03.17h-.24zm3.87-1.12c.28.23.42.61.42 1.14v.66c0 .53-.14.9-.41 1.13s-.66.34-1.15.34-.87-.11-1.14-.34-.41-.61-.41-1.14v-.66c0-.53.14-.91.41-1.14s.66-.35 1.15-.35.88.12 1.13.36zm-.43 1.83v-.73c0-.36-.07-.63-.2-.8s-.32-.26-.57-.26-.44.09-.57.26-.2.44-.2.8v.73c0 .36.07.63.2.81s.32.26.57.26.44-.09.57-.26.2-.45.2-.81z"/></svg>
+                        </button>
+                        <button class="hud-icon-btn" onclick="adjustTrailerTime(10)">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 5c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4zm.41 9.49h-.24v-.15c-.1-.13-.23-.23-.39-.29s-.35-.09-.56-.09c-.27 0-.5.06-.68.17s-.32.27-.41.48-.14.47-.14.77v.29c0 .41.07.72.22.94s.37.33.66.33c.24 0 .43-.05.58-.15s.25-.26.3-.47h.24v1.13h-.22c-.05-.14-.1-.25-.16-.32s-.19-.13-.39-.17-.41-.06-.63-.06c-.47 0-.85-.15-1.14-.44s-.44-.73-.44-1.32v-.39c0-.43.06-.8.19-1.1s.33-.53.6-.69.59-.24.96-.24c.42 0 .76.09 1.02.26s.42.42.49.74l.03.17h-.24zm3.87-1.12c.28.23.42.61.42 1.14v.66c0 .53-.14.9-.41 1.13s-.66.34-1.15.34-.87-.11-1.14-.34-.41-.61-.41-1.14v-.66c0-.53.14-.91.41-1.14s.66-.35 1.15-.35.88.12 1.13.36zm-.43 1.83v-.73c0-.36-.07-.63-.2-.8s-.32-.26-.57-.26-.44.09-.57.26-.2.44-.2.8v.73c0 .36.07.63.2.81s.32.26.57.26.44-.09.57-.26.2-.45.2-.81z"/></svg>
+                        </button>
+                    </div>
+                    <div class="util-right">
+
+    <button class="hud-icon-btn" onclick="toggleMute()">
+
+
+    <svg id="volumeIcon" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+    </svg>
+
+
+    <svg id="muteIcon" class="hidden" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.43 2.43c.04-.2.07-.4.07-.61zM19 12c0 .82-.14 1.6-.4 2.33l1.53 1.53C20.68 14.64 21 13.35 21 12c0-4.01-2.99-7.39-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM3.27 2L2 3.27 8.73 10H3v4h4l5 5v-6.73L17.73 18 19 16.73 3.27 2z"/>
+    </svg>
+
+</button>
+
+</div> <!-- control-utilities -->
+</div> <!-- hud-bottom -->
+</div> <!-- videoControllerHud -->
+</div> <!-- introOverlay -->
+
+    </div>
+
+    <div id="profileScreen" class="profile-container hidden">
+        <div class="profile-nav-header">
+            <h1 class="logo-nav">NETFLIX</h1>
+        </div>
+        <div class="profile-content-box" id="profileContentBox">
+            <h1 class="profile-title">Who's watching?</h1>
+            <div class="profile-gate">
+                <div class="profile-card" onclick="triggerNetflixLoading()">
+                    <div class="avatar-box" id="gfAvatarBox"><img src="images/1.jpg" alt="GF Avatar"></div>
+                    <span class="profile-name">BBQ💖</span>
+                </div>
+            </div>
+        </div>
+        <div id="netflixLoader" class="netflix-loader-wrap hidden">
+            <div class="netflix-spinner"></div>
+        </div>
+    </div>
+
+    <div id="mainContent" class="main-site hidden">
+        <header class="navbar" id="navbar">
+            <div class="nav-left">
+                <h1 class="logo-nav" onclick="scrollToSection('home')">NETFLIX</h1>
+                <nav class="nav-links">
+                    <span class="nav-item active" onclick="scrollToSection('home')">Home</span>
+                    <span class="nav-item" onclick="scrollToSection('anniversaries')">Anniversaries</span>
+                    <span class="nav-item" onclick="scrollToSection('monthsaries')">Monthsaries</span>
+                    <span class="nav-item" onclick="scrollToSection('coming-soon')">Coming Soon</span>
+                    <span class="nav-item" onclick="scrollToSection('my-list')">My List</span>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="kids-text">BBQ💖</span>
+                <img id="currentAvatar" src="images/1.jpg" class="nav-avatar" alt="Avatar">
+            </div>
+        </header>
+
+        <section class="hero-trailer" id="home">
+            <video
+    id="heroVideo"
+    class="hero-video"
+    autoplay
+    muted
+    loop
+    playsinline>
+
+    <source src="videos/trailer.mp4" type="video/mp4">
+
+</video>
+            <div class="hero-content">
+                <div class="original-tag"><span class="n-red">N</span> <span class="og-text">S E R I E S</span></div>
+                <h2 class="hero-title">OUR ENDLESS STORY</h2>
+                <div class="hero-meta">
+                    <span class="match">100% Match</span>
+                    <span class="year">2026</span>
+                    <span class="rating">18+</span>
+                    <span class="seasons">Forever Seasons</span>
+                    <span class="hd-badge">Ultra HD</span>
+                </div>
+                <p class="hero-synopsis">
+                    A Netflix Original Series about two people destined by fate. Filled with endless laughter, deep affection, and unforgettable milestones. Exclusively playing inside your heart forever.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn play-btn" onclick="replayTrailer()">▶ PLAY</button>
+                    <button class="btn info-btn" onclick="openEventModal('mainStory')">ℹ More Info</button>
+                </div>
+                <button id="heroMuteBtn" class="hero-mute-btn">
+    🔇
+</button>
+            </div>
+            <div class="hero-vignette"></div>
+        </section>
+
+        <main class="main-container">
+            <section class="row" id="continue-watching">
+
+    <h3 class="row-title">Continue Watching for BBQ 💖</h3>
+
+    <div class="row-posters">
+
+        <div class="poster-card continuous-card" onclick="openEventModal('lateNight')">
+
+            <img src="images/4.jpg">
+
+            <div class="progress-bar-container">
+                <div class="progress-line" style="width:35%;"></div>
+            </div>
+
+            <div class="poster-overlay">
+
+                <h4>LDR THINGS</h4>
+
+                <p class="match-sub">
+                    100% Match • HD
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+        
+            <section class="row" id="anniversaries">
+
+    <h2 class="section-title">
+       <h2 class="section-title">
+        <h3 class="row-title">The Monthsaries Collection 📆</h3>
+                <div class="row-posters">
+
+
+                <div class="row-posters">
+                    <div class="poster-card" onclick="openEventModal('anniv1')"><img src="images/12.jpg"><div class="poster-overlay"><h4>The Day I Said Yes 💍</h4><p class="match-sub">100% Match</p></div></div>
+                    <div class="poster-card" onclick="openEventModal('annivDinner')"><img src="images/13.jpg"><div class="poster-overlay"><h4>Our First Elegant Dinner 🌹</h4><p class="match-sub">99% Match</p></div></div>
+                    <div class="poster-card" onclick="openEventModal('annivStay')"><img src="images/15.jpg"><div class="poster-overlay"><h4>Anniversary Staycation 🏨</h4><p class="match-sub">98% Match</p></div></div>
+                </div>
+            </section>
+
+            <h3 class="row-title">
+    Anniversary Specials 🩷
+    <span class="coming-soon-label">Coming March 21, 2027</span>
+</h3>
+                <div class="row-posters">
+                    <div class="poster-card" onclick="openEventModal('monthsary1')"><img src="images/20.jpg"><div class="poster-overlay"><h4>Month 1: The Sparks ✨</h4><p class="match-sub">95% Match</p></div></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 Netflix Originals. All Rights Reserved to My Favorite Person.</p>
+        </footer>
+    </div>
+
+    <div id="eventModal" class="modal hidden">
+        <div class="netflix-tablet-box" id="modalBox">
+            
+            <span class="close-btn" onclick="closeEventModal()">&times;</span>
+            
+            <div class="modal-banner-viewport" id="modalBanner">
+                <div class="banner-action-trigger">
+                    <button class="netflix-round-replay">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    </button>
+                    <span class="replay-label">Replay</span>
+                </div>
+            </div>
+
+            <div class="modal-grid-details">
+                <div class="grid-main-left">
+                    <h2 id="modalTitle" class="netflix-meta-title">Series Title</h2>
+                    
+                    <div class="netflix-pill-meta">
+                        <span class="match-percent">100% Match</span>
+                        <span class="meta-tag">2026</span>
+                        <span class="rating-badge">18+</span>
+                        <span class="meta-tag">Limited Series</span>
+                        <span class="hd-box">HD</span>
+                    </div>
+
+                    <div class="top-ranking-row">
+                        <div class="top10-badge">TOP 10</div>
+                        <span class="rank-text">#1 in TV Shows Today</span>
+                    </div>
+
+                    <button class="netflix-wide-btn white-btn"><span class="icon">▶</span> Resume</button>
+                    <button class="netflix-wide-btn grey-btn" id="modalDownloadBtn"><span class="icon">⬇</span> Download Letter</button>
+
+                    <p id="modalEpisodeTracker" class="episode-indicator">S1:E1 Episode 1</p>
+                    <p id="modalLetter" class="netflix-synopsis-text">The detailed message layout goes here...</p>
+                </div>
+
+                <div class="grid-actions-right">
+                    <div class="action-column-btn">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        <span>Set Reminders</span>
+                    </div>
+                    <div class="action-column-btn">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>My List</span>
+                    </div>
+                    <div class="action-column-btn">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span>Rate</span>
+                    </div>
+                    <div class="action-column-btn">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+                        <span>Share</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-sub-tabs-bar">
+                <span class="sub-tab-item active-tab">Episodes</span>
+                <span class="sub-tab-item">More Like This</span>
+                <span class="sub-tab-item">Trailers & More</span>
+            </div>
+
+            <div class="modal-gallery-wrapper">
+                <div class="gallery-row" id="modalGallery"></div>
+            </div>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
